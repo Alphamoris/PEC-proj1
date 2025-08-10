@@ -1,5 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import ScrollRevealText, { ScrollRevealGlow, ScrollRevealWords } from "./ScrollRevealText";
+import { GlowButton } from "./ui/Button";
+import AnimatedCounter from "./effects/AnimatedCounter";
 
 const AboutSection = () => {
   const sectionRef = useRef(null);
@@ -101,35 +104,46 @@ const AboutSection = () => {
                 <div className="w-8 h-px bg-green-400"></div>
               </motion.div>
               
-              <motion.h2 
-                variants={itemVariants}
+              <ScrollRevealGlow
                 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold font-transformers tracking-tight"
+                glowColor="74, 222, 128"
+                triggerPoint={0.3}
               >
                 PEC HACKS
                 <span className="block text-green-400">3.0</span>
-              </motion.h2>
+              </ScrollRevealGlow>
             </div>
 
             {/* Description */}
             <motion.div variants={itemVariants} className="space-y-4 sm:space-y-6">
-              <p className="text-gray-100 text-base sm:text-lg lg:text-xl leading-relaxed">
-                Welcome to <span className="text-green-400 font-bold">PEC HACKS 3.0</span>, 
-                Tamil Nadu's most prestigious hackathon that brings together the brightest minds 
-                in technology, innovation, and creativity.
-              </p>
+              <ScrollRevealWords
+                text="Welcome to PEC HACKS 3.0, Tamil Nadu's most prestigious hackathon that brings together the brightest minds in technology, innovation, and creativity."
+                className="text-gray-100 text-base sm:text-lg lg:text-xl leading-relaxed"
+                staggerDelay={0.05}
+                triggerPoint={0.2}
+              />
               
-              <p className="text-gray-200 text-sm sm:text-base lg:text-lg leading-relaxed">
+              <ScrollRevealText
+                className="text-gray-200 text-sm sm:text-base lg:text-lg leading-relaxed"
+                triggerPoint={0.4}
+                startOpacity={0.2}
+                enableBrightnessEffect={true}
+              >
                 For 36 hours straight, participants will push the boundaries of what's possible, 
                 creating solutions that matter. From AI and machine learning to web development 
                 and mobile applications, this is where ideas transform into reality.
-              </p>
+              </ScrollRevealText>
             </motion.div>
 
             {/* Features */}
             <motion.div variants={itemVariants} className="space-y-4">
-              <h3 className="text-xl sm:text-2xl font-bold text-green-400 font-mono">
+              <ScrollRevealGlow
+                className="text-xl sm:text-2xl font-bold text-green-400 font-mono"
+                glowColor="74, 222, 128"
+                triggerPoint={0.5}
+              >
                 What Makes It Special?
-              </h3>
+              </ScrollRevealGlow>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
                   { icon: "🚀", text: "Cutting-edge Technologies" },
@@ -140,7 +154,11 @@ const AboutSection = () => {
                   <motion.div
                     key={index}
                     variants={itemVariants}
-                    className="flex items-center space-x-3 p-3 border border-gray-600 rounded-lg bg-black/40 backdrop-blur-sm"
+                    className="flex items-center space-x-3 p-3 border border-gray-600 rounded-lg bg-black/40 backdrop-blur-sm card-hover hover:border-green-400/50 group cursor-pointer magnetic animate-hologram"
+                    whileHover={{ 
+                      scale: 1.02,
+                      boxShadow: "0 0 25px rgba(74, 222, 128, 0.3)"
+                    }}
                   >
                     <span className="text-2xl">{feature.icon}</span>
                     <span className="text-gray-100 font-mono text-sm">
@@ -165,14 +183,38 @@ const AboutSection = () => {
                 <motion.div
                   key={index}
                   variants={statsVariants}
-                  className="text-center p-4 sm:p-6 border border-gray-600 rounded-lg bg-black/50 backdrop-blur-sm"
+                  className="relative text-center p-4 sm:p-6 border border-gray-600 rounded-lg bg-black/50 backdrop-blur-sm card-hover hover:border-green-400/50 group cursor-pointer overflow-hidden"
+                  whileHover={{ 
+                    scale: 1.05, 
+                    rotateY: 5,
+                    boxShadow: "0 0 30px rgba(74, 222, 128, 0.3)"
+                  }}
                 >
-                  <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-green-400 font-mono">
-                    {stat.number}
-                  </div>
-                  <div className="text-gray-200 text-sm sm:text-base font-mono mt-2">
+                  
+                  
+                  <AnimatedCounter
+                    startValue={1000}
+                    endValue={stat.number}
+                    duration={4000}
+                    delay={0}
+                    className="text-2xl sm:text-3xl lg:text-4xl font-bold text-green-400 font-mono"
+                  />
+                  <div className="text-gray-200 text-sm sm:text-base font-mono mt-2 group-hover:text-white transition-colors duration-300">
                     {stat.label}
                   </div>
+
+                  {/* Hover glow effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-green-400/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    whileHover={{
+                      background: [
+                        "rgba(74, 222, 128, 0.05)",
+                        "rgba(74, 222, 128, 0.1)",
+                        "rgba(74, 222, 128, 0.05)"
+                      ]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
                 </motion.div>
               ))}
             </div>
@@ -180,9 +222,9 @@ const AboutSection = () => {
             {/* Event Details */}
             <motion.div 
               variants={itemVariants}
-              className="border border-gray-600 rounded-lg p-6 bg-black/50 backdrop-blur-sm space-y-4"
+              className="border border-gray-600 rounded-lg p-4 sm:p-6 bg-black/50 backdrop-blur-sm space-y-4"
             >
-              <h3 className="text-xl font-bold text-green-400 font-mono">Event Details</h3>
+              <h3 className="text-lg sm:text-xl font-bold text-green-400 font-mono">Event Details</h3>
               <div className="space-y-3">
                 {[
                   { label: "Date", value: "December 2025" },
@@ -190,9 +232,9 @@ const AboutSection = () => {
                   { label: "Location", value: "PEC Campus" },
                   { label: "Format", value: "Hybrid (On-site + Online)" }
                 ].map((detail, index) => (
-                  <div key={index} className="flex justify-between items-center py-2 border-b border-gray-700 last:border-b-0">
-                    <span className="text-gray-200 font-mono text-sm">{detail.label}</span>
-                    <span className="text-white font-semibold text-sm">{detail.value}</span>
+                  <div key={index} className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-700 last:border-b-0 space-y-1 sm:space-y-0">
+                    <span className="text-gray-200 font-mono text-xs sm:text-sm flex-shrink-0">{detail.label}</span>
+                    <span className="text-white font-semibold text-xs sm:text-sm text-left sm:text-right break-words">{detail.value}</span>
                   </div>
                 ))}
               </div>
@@ -200,19 +242,17 @@ const AboutSection = () => {
 
             {/* CTA Button */}
             <motion.div variants={itemVariants} className="text-center lg:text-left">
-              <motion.button
-                whileHover={{ 
-                  scale: 1.05,
-                  boxShadow: "0 0 20px rgba(74, 222, 128, 0.3)"
-                }}
-                whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center space-x-3 px-8 py-4 bg-green-400 text-black font-bold rounded-lg transition-all duration-300 hover:bg-green-300 font-mono text-sm tracking-wide"
+              <GlowButton
+                size="lg"
+                rightIcon={
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                }
+                className="tracking-wide animate-magnetic liquid-button cyberpunk-glow"
               >
-                <span>REGISTER NOW</span>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </motion.button>
+                REGISTER NOW
+              </GlowButton>
             </motion.div>
           </motion.div>
         </motion.div>
@@ -225,13 +265,21 @@ const AboutSection = () => {
           className="mt-20 pt-16 border-t border-gray-800"
         >
           <motion.div variants={itemVariants} className="text-center space-y-8">
-            <h3 className="text-2xl sm:text-3xl font-bold text-green-400 font-mono">
+            <ScrollRevealGlow
+              className="text-2xl sm:text-3xl font-bold text-green-400 font-mono"
+              glowColor="74, 222, 128"
+              triggerPoint={0.3}
+            >
               Ready to Transform Ideas into Reality?
-            </h3>
-            <p className="text-gray-200 text-lg max-w-2xl mx-auto">
+            </ScrollRevealGlow>
+            <ScrollRevealText
+              className="text-gray-200 text-lg max-w-2xl mx-auto"
+              triggerPoint={0.4}
+              startOpacity={0.3}
+            >
               Join hundreds of innovators, developers, and dreamers in Tamil Nadu's 
               most exciting hackathon experience.
-            </p>
+            </ScrollRevealText>
             
             {/* Decorative Elements */}
             <div className="flex justify-center items-center space-x-4 opacity-60">

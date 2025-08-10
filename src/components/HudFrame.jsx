@@ -3,6 +3,8 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
+import MobileMenu from "./MobileMenu";
+import Button, { GlowButton } from "./ui/Button";
 
 function AstronautModel({ onRotationUpdate }) {
   const { scene } = useGLTF("/astronaut-on-suit.glb");
@@ -78,6 +80,7 @@ const HudFrame = () => {
   const [rotation, setRotation] = useState(0);
   const [hudOpacity, setHudOpacity] = useState(1);
   const [showStickyNav, setShowStickyNav] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const contentRef = useRef(null);
   const titleRef = useRef(null);
   const containerRef = useRef(null);
@@ -195,9 +198,21 @@ const HudFrame = () => {
           aboutSection.scrollIntoView({ behavior: 'smooth' });
         }
         break;
+      case 'problem':
+        const problemSection = document.getElementById('problem-statement-section');
+        if (problemSection) {
+          problemSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        break;
+      case 'partnership':
+      case 'sponsors':
+        const partnershipSection = document.getElementById('partnership-section');
+        if (partnershipSection) {
+          partnershipSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        break;
       case 'domains':
       case 'prizes':
-      case 'sponsors':
       case 'contact':
         // Placeholder for future sections
         console.log(`${item} section will be implemented`);
@@ -333,7 +348,7 @@ const HudFrame = () => {
           </motion.div>
 
           {/* Center nav items - Hidden on small mobile */}
-          {windowSize.width > 480 && (
+          {windowSize.width > 480 && !isMobile && (
             <motion.div
               className={`flex ${navItemSpacing} absolute left-1/2 transform -translate-x-1/2`}
               initial={{ opacity: 0 }}
@@ -341,40 +356,53 @@ const HudFrame = () => {
               transition={{ delay: 0.9, staggerChildren: 0.1 }}
             >
               <motion.button
-                className="text-green-400 font-mono text-xs sm:text-sm hover:text-green-300 active:text-green-200 transition-colors"
+                className="text-green-400 font-mono text-xs sm:text-sm hover:text-green-300 active:text-green-200 transition-colors min-h-[44px] px-3 flex items-center"
                 variants={itemVariants}
                 onClick={() => handleNavClick("home")}
               >
                 HOME
               </motion.button>
-              {!isMobile && (
-                <>
-                  <motion.button
-                    className="text-gray-400 font-mono text-xs sm:text-sm hover:text-white active:text-gray-200 transition-colors"
-                    variants={itemVariants}
-                    onClick={() => handleNavClick("about")}
-                  >
-                    ABOUT
-                  </motion.button>
-                  <motion.button
-                    className="text-gray-400 font-mono text-xs sm:text-sm hover:text-white active:text-gray-200 transition-colors"
-                    variants={itemVariants}
-                    onClick={() => handleNavClick("domains")}
-                  >
-                    DOMAINS
-                  </motion.button>
-                  {isDesktop && (
-                    <motion.button
-                      className="text-gray-400 font-mono text-xs sm:text-sm hover:text-white active:text-gray-200 transition-colors"
-                      variants={itemVariants}
-                      onClick={() => handleNavClick("prizes")}
-                    >
-                      PRIZES
-                    </motion.button>
-                  )}
-                </>
+              <motion.button
+                className="text-gray-400 font-mono text-xs sm:text-sm hover:text-white active:text-gray-200 transition-colors min-h-[44px] px-3 flex items-center"
+                variants={itemVariants}
+                onClick={() => handleNavClick("about")}
+              >
+                ABOUT
+              </motion.button>
+              <motion.button
+                className="text-gray-400 font-mono text-xs sm:text-sm hover:text-white active:text-gray-200 transition-colors min-h-[44px] px-3 flex items-center"
+                variants={itemVariants}
+                onClick={() => handleNavClick("problem")}
+              >
+                PROBLEM
+              </motion.button>
+              {isDesktop && (
+                <motion.button
+                  className="text-gray-400 font-mono text-xs sm:text-sm hover:text-white active:text-gray-200 transition-colors min-h-[44px] px-3 flex items-center"
+                  variants={itemVariants}
+                  onClick={() => handleNavClick("prizes")}
+                >
+                  PRIZES
+                </motion.button>
               )}
             </motion.div>
+          )}
+
+          {/* Mobile menu button */}
+          {(isMobile || windowSize.width <= 480) && (
+            <motion.button
+              className="absolute left-1/2 transform -translate-x-1/2 text-gray-400 hover:text-green-400 transition-colors p-2 rounded-lg hover:bg-green-400/10"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.9 }}
+              onClick={() => setMobileMenuOpen(true)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </motion.button>
           )}
 
           {/* Right side - Local time */}
@@ -483,7 +511,7 @@ const HudFrame = () => {
       {/* Sticky Navigation */}
       {showStickyNav && (
         <motion.div
-          className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-green-500/30"
+          className="fixed top-0 left-0 right-0 z-50 glass border-b border-green-500/30"
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -100, opacity: 0 }}
@@ -499,52 +527,79 @@ const HudFrame = () => {
               PEC HACKS 3.0
             </motion.div>
             
-            <motion.nav
-              className="flex space-x-6"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              <button
-                className="text-green-400 font-mono text-sm hover:text-green-300 transition-colors"
-                onClick={() => handleNavClick("home")}
+            {/* Desktop Navigation */}
+            {!isMobile && (
+              <motion.nav
+                className="hidden md:flex space-x-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
               >
-                HOME
-              </button>
-              <button
-                className="text-gray-400 font-mono text-sm hover:text-white transition-colors"
-                onClick={() => handleNavClick("about")}
+                <button
+                  className="text-green-400 font-mono text-sm hover:text-green-300 transition-colors min-h-[44px] px-3 flex items-center"
+                  onClick={() => handleNavClick("home")}
+                >
+                  HOME
+                </button>
+                <button
+                  className="text-gray-400 font-mono text-sm hover:text-white transition-colors min-h-[44px] px-3 flex items-center"
+                  onClick={() => handleNavClick("about")}
+                >
+                  ABOUT
+                </button>
+                <button
+                  className="text-gray-400 font-mono text-sm hover:text-white transition-colors min-h-[44px] px-3 flex items-center"
+                  onClick={() => handleNavClick("problem")}
+                >
+                  PROBLEM
+                </button>
+                <button
+                  className="text-gray-400 font-mono text-sm hover:text-white transition-colors min-h-[44px] px-3 flex items-center"
+                  onClick={() => handleNavClick("prizes")}
+                >
+                  PRIZES
+                </button>
+                <button
+                  className="text-gray-400 font-mono text-sm hover:text-white transition-colors min-h-[44px] px-3 flex items-center"
+                  onClick={() => handleNavClick("partnership")}
+                >
+                  PARTNERSHIP
+                </button>
+                <button
+                  className="text-gray-400 font-mono text-sm hover:text-white transition-colors min-h-[44px] px-3 flex items-center"
+                  onClick={() => handleNavClick("contact")}
+                >
+                  CONTACT
+                </button>
+              </motion.nav>
+            )}
+
+            {/* Mobile menu button for sticky nav */}
+            {isMobile && (
+              <motion.button
+                className="text-gray-400 hover:text-green-400 transition-colors p-2 rounded-lg hover:bg-green-400/10"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                onClick={() => setMobileMenuOpen(true)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                ABOUT
-              </button>
-              <button
-                className="text-gray-400 font-mono text-sm hover:text-white transition-colors"
-                onClick={() => handleNavClick("domains")}
-              >
-                DOMAINS
-              </button>
-              <button
-                className="text-gray-400 font-mono text-sm hover:text-white transition-colors"
-                onClick={() => handleNavClick("prizes")}
-              >
-                PRIZES
-              </button>
-              <button
-                className="text-gray-400 font-mono text-sm hover:text-white transition-colors"
-                onClick={() => handleNavClick("sponsors")}
-              >
-                SPONSORS
-              </button>
-              <button
-                className="text-gray-400 font-mono text-sm hover:text-white transition-colors"
-                onClick={() => handleNavClick("contact")}
-              >
-                CONTACT
-              </button>
-            </motion.nav>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </motion.button>
+            )}
           </div>
         </motion.div>
       )}
+
+      {/* Mobile Menu */}
+      <MobileMenu 
+        isOpen={mobileMenuOpen} 
+        onClose={() => setMobileMenuOpen(false)}
+        onNavigate={handleNavClick}
+      />
     </div>
   );
 };

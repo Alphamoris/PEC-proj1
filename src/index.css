@@ -1,5 +1,30 @@
 @import "tailwindcss";
 
+/* Global responsive setup */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -ms-overflow-style: none; /* For IE and Edge */
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  min-height: 100vh;
+  width: 100%;
+}
+
 /* Transformers font utility class for easy reuse */
 .font-transformers {
   font-family: 'Transformers', sans-serif;
@@ -10,12 +35,407 @@
   display: none;
 }
 
-/* For Firefox */
-html {
-  scrollbar-width: none;
+/* Responsive breakpoint helpers */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 
-/* For IE and Edge */
-body {
-  -ms-overflow-style: none;
+/* Smooth scroll reveal text effects */
+.scroll-reveal-text {
+  transition: opacity 0.3s ease-out, filter 0.3s ease-out, text-shadow 0.3s ease-out;
+}
+
+.scroll-reveal-words span {
+  transition: opacity 0.2s ease-out, filter 0.2s ease-out;
+}
+
+.scroll-reveal-glow {
+  transition: opacity 0.4s ease-out, text-shadow 0.4s ease-out;
+}
+
+/* Prevent layout shift */
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Better responsive containers */
+.responsive-container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Advanced animations and effects */
+@keyframes shimmer {
+  0% { transform: translateX(-100%) skewX(-12deg); }
+  100% { transform: translateX(300%) skewX(-12deg); }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(74, 222, 128, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(74, 222, 128, 0.6); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Utility animation classes */
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.6s ease-out;
+}
+
+/* Ripple effect */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+/* Enhanced focus states */
+.focus-visible {
+  outline: 2px solid #4ade80;
+  outline-offset: 2px;
+}
+
+/* Better selection colors */
+::selection {
+  background-color: #4ade80;
+  color: #000;
+}
+
+::-moz-selection {
+  background-color: #4ade80;
+  color: #000;
+}
+
+/* Enhanced scrollbar for browsers that support it */
+@supports (scrollbar-width: thin) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #4ade80 transparent;
+  }
+}
+
+@supports selector(::-webkit-scrollbar) {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #4ade80;
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #22c55e;
+  }
+}
+
+/* Improved form elements */
+input, textarea, select {
+  transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: #4ade80;
+  border-color: #4ade80;
+}
+
+/* Loading states */
+.loading-skeleton {
+  background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Better text rendering */
+.text-crisp {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Glass morphism effect */
+.glass {
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Neon glow effect */
+.neon-green {
+  box-shadow: 
+    0 0 5px #4ade80,
+    0 0 10px #4ade80,
+    0 0 15px #4ade80,
+    0 0 20px #4ade80;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Touch optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .card-hover:hover {
+    transform: none;
+  }
+  
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Spectacular hover effects */
+@keyframes electric {
+  0%, 100% { 
+    text-shadow: 
+      0 0 5px #4ade80,
+      0 0 10px #4ade80,
+      0 0 15px #4ade80;
+  }
+  50% { 
+    text-shadow: 
+      0 0 2px #4ade80,
+      0 0 5px #4ade80,
+      0 0 8px #4ade80,
+      0 0 12px #4ade80,
+      0 0 20px #4ade80;
+  }
+}
+
+@keyframes magneticFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-3px) rotate(1deg); }
+  50% { transform: translateY(-5px) rotate(0deg); }
+  75% { transform: translateY(-3px) rotate(-1deg); }
+}
+
+@keyframes particleBurst {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+@keyframes hologramFlicker {
+  0%, 100% { 
+    opacity: 1;
+    filter: hue-rotate(0deg);
+  }
+  25% { 
+    opacity: 0.8;
+    filter: hue-rotate(90deg);
+  }
+  50% { 
+    opacity: 0.9;
+    filter: hue-rotate(180deg);
+  }
+  75% { 
+    opacity: 0.85;
+    filter: hue-rotate(270deg);
+  }
+}
+
+@keyframes digitalGlitch {
+  0%, 100% { 
+    transform: translateX(0);
+    filter: hue-rotate(0deg);
+  }
+  10% { 
+    transform: translateX(-2px);
+    filter: hue-rotate(90deg);
+  }
+  20% { 
+    transform: translateX(2px);
+    filter: hue-rotate(180deg);
+  }
+  30% { 
+    transform: translateX(-1px);
+    filter: hue-rotate(270deg);
+  }
+  40% { 
+    transform: translateX(1px);
+    filter: hue-rotate(360deg);
+  }
+}
+
+/* Utility classes for cool effects */
+.animate-electric {
+  animation: electric 2s ease-in-out infinite;
+}
+
+.animate-magnetic {
+  animation: magneticFloat 4s ease-in-out infinite;
+}
+
+.animate-hologram {
+  animation: hologramFlicker 3s ease-in-out infinite;
+}
+
+.animate-glitch {
+  animation: digitalGlitch 0.3s ease-in-out infinite;
+}
+
+.animate-particle-burst {
+  animation: particleBurst 0.6s ease-out;
+}
+
+/* 3D perspective effects */
+.perspective-card {
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.perspective-card:hover {
+  transform: rotateY(10deg) rotateX(5deg) translateZ(20px);
+}
+
+/* Magnetic attraction effect */
+.magnetic {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.magnetic:hover {
+  transform: scale(1.05) translateY(-5px);
+  filter: brightness(1.2) saturate(1.3);
+}
+
+/* Liquid button effect */
+.liquid-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(74, 222, 128, 0.4), transparent);
+  transition: left 0.5s;
+}
+
+.liquid-button:hover::before {
+  left: 100%;
+}
+
+/* Cyberpunk glow */
+.cyberpunk-glow {
+  position: relative;
+}
+
+.cyberpunk-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(45deg, #4ade80, #22c55e, #16a34a, #4ade80);
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: xor;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.cyberpunk-glow:hover::after {
+  opacity: 1;
+  animation: electric 2s ease-in-out infinite;
 }
